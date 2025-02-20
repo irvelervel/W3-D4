@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EPICalendar</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1 id="current-month">
+        <!-- qui dentro, invece che inserire il mese a mano, lascio il compito
+             a JS di riconoscerlo e lo inseriremo in questo tag h1 dinamicamente -->
+      </h1>
+    </header>
+    <main>
+      <div id="container">
+        <section id="calendar">
+          <!-- qui dentro andranno le celle del calendario -->
+          <!-- poichè non conosco ancora quanti giorni ha il mese corrente,
+                   non posso stabilire una volta per tutte la struttura di questa sezione -->
+          <!-- lascerò sempre a JS il compito di capire quanti giorni ha il mese corrente
+                 e di riempire conseguentemente questa section -->
+        </section>
+        <section id="addMeeting">
+          <!-- qui ci va una sezione per permettere all'utente di AGGIUNGERE un appuntamento
+             alla giorno/ora selezionati -->
+          <form>
+            <div>
+              <h4>Meeting Day</h4>
+              <span id="newMeetingDay">Click on a Day</span>
+            </div>
+            <div>
+              <h4>Meeting Time</h4>
+              <input type="time" id="newMeetingTime" />
+            </div>
+            <div>
+              <h4>Meeting Name</h4>
+              <input
+                type="text"
+                id="newMeetingName"
+                placeholder="Insert a name for the meeting"
+              />
+            </div>
+            <div>
+              <h4>Add</h4>
+              <button>Save Meeting</button>
+            </div>
+          </form>
+        </section>
+      </div>
+      <section>
+        <!-- sezione per gli appuntamenti esistenti -->
+        <div id="appointments">
+          <h2>Appointments for the Day:</h2>
+          <ul>
+            <!-- non ci metto un bel niente! -->
+            <!-- nel caso la giornata cliccata contenga degli appuntamenti,
+                  andremo a circondarli di altrettanti <li> e li inseriremo qui dentro -->
+          </ul>
+        </div>
+      </section>
+    </main>
+    <!-- <footer></footer> -->
+    <script src="./js/script.js"></script>
+  </body>
+</html>
