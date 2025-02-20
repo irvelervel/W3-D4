@@ -80,6 +80,37 @@ const daysInThisMonth = function () {
   return numberOfDays
 }
 
+const showAppointments = function (i) {
+  // questa funzione si occuperà di MOSTRARE la sezioni degli appuntamenti
+  // e di crearne la lista sulla base del giorno selezionato
+
+  // per prima cosa, tolgo il "display: none" sulla section degli appuntamenti
+  const appointmentsSection = document.getElementById('appointments')
+  appointmentsSection.style.display = 'block'
+
+  // ora la sezione è visibile, però è vuota :(
+  // dobbiamo recuperare gli appuntamenti della giornata, crearne una lista
+  // e mostrarli!
+
+  // recuperiamo anche qui gli appuntamenti da mostrare
+  const appointmentsToShow = memory[i]
+  console.log('APPUNTAMENTI DA MOSTRARE')
+
+  // recupero un riferimento alla <ul>
+  const appointmentsList = document.querySelector('#appointments ul')
+
+  // svuoto la lista innanzitutto! perchè così eviterò di appendere i miei <li>
+  // su <li> già presenti da prima...
+  appointmentsList.innerHTML = ''
+
+  for (let i = 0; i < appointmentsToShow.length; i++) {
+    const newLi = document.createElement('li')
+    newLi.innerText = appointmentsToShow[i] // "18:00 - Dentista"
+    // vado ad appendere questo <li> alla <ul> della section appointments
+    appointmentsList.appendChild(newLi)
+  }
+}
+
 const createCalendarCells = function (numberOfDays) {
   // questa funzione si occupa di creare da zero le celle per il calendario
   // e di appenderle nel DOM
@@ -130,6 +161,16 @@ const createCalendarCells = function (numberOfDays) {
       const spanToReplace = document.getElementById('newMeetingDay')
       spanToReplace.innerText = i + 1
       spanToReplace.classList.add('hasDay')
+
+      // ora verifico anche se la cella cliccata corrisponde ad un giorno
+      // in cui sono stati salvati degli appuntamenti...
+      if (memory[i].length > 0) {
+        // devo far vedere gli appuntamenti!
+        showAppointments(i)
+      } else {
+        // per questa giornata NON ci sono appuntamenti da mostrare
+        document.getElementById('appointments').style.display = 'none'
+      }
     })
 
     // contenuto di cell
@@ -157,6 +198,44 @@ const createCalendarCells = function (numberOfDays) {
   console.log('MEMORY', memory)
 }
 
+const handleSubmit = function (e) {
+  e.preventDefault()
+  console.log('SALVIAMO APPUNTAMENTO')
+
+  // su quale giorno ho cliccato? lo prendo dallo span in basso a sx
+  const spanToReplace = document.getElementById('newMeetingDay') // lo span
+  const selectedDay = parseInt(spanToReplace.innerText) // il valore dello span
+  // '22' -> 22
+  const timeInput = document.getElementById('newMeetingTime') // <input />
+  const selectedTime = timeInput.value
+  const meetingInput = document.getElementById('newMeetingName')
+  const selectedName = meetingInput.value
+
+  const appointment = `${selectedTime} - ${selectedName}` // "18:00 - Dentista"
+
+  // ora dobbiamo "solamente" individuare il "cassetto" corretto dentro memory
+  // e pusharci dentro la stringa appointment!
+  memory[selectedDay - 1].push(appointment)
+
+  console.log('APPUNTAMENTO SALVATO! ECCO MEMORY', memory)
+
+  // andiamo a cercare la cella sul calendario corrispondente al giorno del nostro evento
+  // e assegniamole la classe "dot"
+  const cellWithAppointment = document.querySelector('.selected')
+  // creo il pallino viola
+  const dotElement = document.createElement('span')
+  dotElement.classList.add('dot')
+  // appendo il pallino viola alla cella "selected"
+  cellWithAppointment.appendChild(dotElement)
+
+  // mostriamo la sezione appointments
+  showAppointments(selectedDay - 1) // selectedDay - 1 è l'indice giusto di memory
+
+  // svuotiamo ora e nome
+  timeInput.value = ''
+  meetingInput.value = ''
+}
+
 // da qui cominciano le INVOCAZIONI delle mie funzioni
 showMonthInHeader() // metto il nome del mese nell'h1
 
@@ -171,17 +250,5 @@ createCalendarCells(numberOfDays)
 // gestiamo la logica del form per SALVARE gli appuntamenti
 const meetingForm = document.getElementById('newMeetingForm')
 meetingForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  console.log('SALVIAMO APPUNTAMENTO')
-
-  // su quale giorno ho cliccato? lo prendo dallo span in basso a sx
-  const spanToReplace = document.getElementById('newMeetingDay') // lo span
-  const selectedDay = parseInt(spanToReplace.innerText) // il valore dello span
-  // '22' -> 22
-  const timeInput = document.getElementById('newMeetingTime') // <input />
-  const selectedTime = timeInput.value
-  const meetingInput = document.getElementById('newMeetingName')
-  const selectedName = meetingInput.value
-
-  const appointment = `${selectedTime} - ${selectedName}` // "18:00 - Dentista"
+  handleSubmit(e)
 })
